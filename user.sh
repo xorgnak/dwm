@@ -1,10 +1,4 @@
 
-EXE=dwm
-DEV='libx11-dev libxft-dev libxinerama-dev build-essential'
-SYS='xinit xorg xterm alsa-base alsa-utils chromium vlc'
-
-apt-get -y install $EXE $DEV $SYS
-
 cat << EOF > ~/.xinitrc
 xrdb -merge ~/.Xresources
 hash chromium && chromium &
@@ -71,8 +65,3 @@ XTerm*color13:     #ec93d3
 XTerm*color14:     #93e0e3
 XTerm*color15:     #ffffff
 EOF
-apt-get -y remove $EXE
-make install
-make clean
-apt-get -y remove $DEV
-echo "DONE!"
