@@ -14,6 +14,18 @@ function ssh_to_server() {
 function git_repo_commit_and_push() {
     git add . && git commit -m "$*" && git push origin main;
 }                                                                                                   
+watch() {
+    mkdir -p $1
+    inotifywait -mq \
+	      --timefmt '%s' \
+	      -e modify,delete \
+	      --format '{ "timestamp": "%T", "events": "%e", "file": "%f" }' $1 | while read out;
+    do
+	redis-cli publish "WATCH.$1" "$out";
+    done > /dev/null
+}
+
+
 function work {
     if [ $1 == "connect" ]; then
        	shift;
@@ -37,6 +49,8 @@ function work {
     	nmap $WORK_NMAP $2;
     elif [ $1 == "scanme" ]; then
         nmap $WORK_NMAP scanme.nmap.org;
+    elif [ $1 == "watch" ]; then
+    	watch $2
     else
 	echo "usage: work [connect|push|pull|browser|user|wifi|hack|shark|fingerprint|scanme]";
 	echo " connect <domain>";
