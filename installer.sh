@@ -85,3 +85,4 @@ EOF
     sudo echo 'xsetroot -name "nomadic 0.1 | go places."' >> $u/.xinitrc
     sudo echo "exec dwm" >> $u/.xinitrc
 done
+
