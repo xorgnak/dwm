@@ -1,0 +1,6 @@
+apt install -y suckless-tools stterm libxinerama-dev libxft-dev xinit xorg xterm
+make clean install
+for u in /home/*
+do
+    echo "exec dwm" >> $u/.xinitrc
+done
