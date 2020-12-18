@@ -26,7 +26,7 @@ pass=`echo -n $city | shasum | cut -c8-16`
 redis-cli set pass $pass
 
 cp Xresources ~/.Xresources
-sudo echo "xrdb -merge ~/.Xresources" >> ~/.xinitrc
+sudo echo "xrdb -merge ~/.Xresources" > ~/.xinitrc
 sudo echo "chmod +x ~/.autostart && ./.autostart &" >> ~/.xinitrc
 sudo echo 'xsetroot -name "nomadic 0.1 | go places."' >> ~/.xinitrc
 sudo echo "exec dwm" >> ~/.xinitrc
