@@ -1,40 +1,38 @@
 
 sudo apt update
 sudo apt upgrade
-sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm cromium-browser lxterminal
+
+sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm firefox-esr lxterminal
 
 sudo make clean install
-for u in /home/*
-do
-  	  cat EOF<<EOF > $u/.autostart
+
+cat << EOF > ~/.autostart
 #!/bin/sh
 # nomadic cabage autostart script.
 display() {
     if [ "$WORK_MODE" == "expert" ]; then
-	lxterminal -e screen &
+	x-terminal-emulator -e screen &
     elif [ "$WORK_MODE" == "public" ]; then
-	    chromium-browser --kiosk https://vango.me/profile?id=`redis-cli get ID` &
+	    x-www-browser --kiosk https://vango.me/profile?id=`redis-cli get ID` &
     else
-	    chromium-browser https://vango.me/profile?id=`redis-cli get ID` &
+	    x-www-browser https://vango.me/profile?id=`redis-cli get ID` &
     fi
 }
 startup() { stterm -e wicd-curses; }
 startup && display
 EOF
-    city=`redis-cli get CITY`
-    pass=`echo -n $city | shasum | cut -c8-16`
-    redis-cli set pass $pass
-    cat EOF<<EOF > $u/.irc.el
+city=`redis-cli get CITY`
+pass=`echo -n $city | shasum | cut -c8-16`
+redis-cli set pass $pass
+cat << EOF > ~/.irc.el
 (require 'erc-join)(erc-autojoin-mode 1)
 (setq erc-autojoin-channels-alist 
 '(("vango.me" "#feed" "#`redis-cli get CITY`" "#`redis-cli get NICK`")))
-(erc :server "vango.me" :full-name "`redis-cli get ID`" :nick "`redis-cli get NICK`" :password "$pass")
+(erc :server "v	ango.me" :full-name "`redis-cli get ID`" :nick "`redis-cli get NICK`" :password "$pass")
 EOF
-    cp Xresources $u/.Xresources
-    sudo echo 'screen -t "#" emacs -nw --load ~/.irc.el index.org' >> $u/.screenrc
-    sudo echo "xrdb -merge ~/.Xresources" >> $u/.xinitrc
-    sudo echo "chmod +x ~/.autostart && ./.autostart &" >> $u/.xinitrc
-    sudo echo 'xsetroot -name "nomadic 0.1 | go places."' >> $u/.xinitrc
-    sudo echo "exec dwm" >> $u/.xinitrc
-done
 
+#cp Xresources ~/.Xresources
+sudo echo "xrdb -merge ~/.Xresources" >> ~/.xinitrc
+sudo echo "chmod +x ~/.autostart && ./.autostart &" >> ~/.xinitrc
+sudo echo 'xsetroot -name "nomadic 0.1 | go places."' >> ~/.xinitrc
+sudo echo "exec dwm" >> ~/.xinitrc
