@@ -2,7 +2,7 @@
 sudo apt update
 sudo apt upgrade
 
-sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm firefox-esr lxterminal
+sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm firefox-esr lxterminal wicd-curses
 
 sudo make clean install
 
@@ -18,20 +18,14 @@ display() {
 	    x-www-browser https://vango.me/profile?id=`redis-cli get ID` &
     fi
 }
-startup() { stterm -e wicd-curses; }
+startup() { x-terminal-emulator -e wicd-curses; }
 startup && display
 EOF
 city=`redis-cli get CITY`
 pass=`echo -n $city | shasum | cut -c8-16`
 redis-cli set pass $pass
-cat << EOF > ~/.irc.el
-(require 'erc-join)(erc-autojoin-mode 1)
-(setq erc-autojoin-channels-alist 
-'(("vango.me" "#feed" "#`redis-cli get CITY`" "#`redis-cli get NICK`")))
-(erc :server "v	ango.me" :full-name "`redis-cli get ID`" :nick "`redis-cli get NICK`" :password "$pass")
-EOF
 
-#cp Xresources ~/.Xresources
+cp Xresources ~/.Xresources
 sudo echo "xrdb -merge ~/.Xresources" >> ~/.xinitrc
 sudo echo "chmod +x ~/.autostart && ./.autostart &" >> ~/.xinitrc
 sudo echo 'xsetroot -name "nomadic 0.1 | go places."' >> ~/.xinitrc
