@@ -2,9 +2,9 @@
 sudo apt update
 sudo apt upgrade
 
-sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm firefox-esr lxterminal wicd-curses
+sudo apt install -y suckless-tools stterm libx11-dev libxinerama-dev libxft-dev xinit xorg xterm firefox-esr lxterminal wicd-curses > /dev/null
 
-sudo make clean install
+sudo make clean install > /dev/null
 
 cat << EOF > ~/.autostart
 #!/bin/sh
@@ -21,9 +21,10 @@ display() {
 startup() { x-terminal-emulator -e wicd-curses; }
 startup && display
 EOF
+
 city=`redis-cli get CITY`
 pass=`echo -n $city | shasum | cut -c8-16`
-redis-cli set pass $pass
+redis-cli set pass $pass > /dev/null
 
 cp Xresources ~/.Xresources
 sudo echo "xrdb -merge ~/.Xresources" > ~/.xinitrc
