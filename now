@@ -10,9 +10,10 @@ cat << EOF > ~/.autostart
 #!/bin/sh
 # nomadic cabage autostart script.
 display() {
-    if [ "\$WORK_MODE" == "expert" ]; then
+    m=`redis-cli hget nomadic mode`
+    if [ "\$m" == "expert" ]; then
 	x-terminal-emulator -e screen &
-    elif [ "\$WORK_MODE" == "public" ]; then
+    elif [ "\$m" == "public" ]; then
 	    x-www-browser --kiosk https://vango.me/profile?id=`redis-cli get ID` &
     else
 	    x-www-browser https://vango.me/profile?id=`redis-cli get ID` &
